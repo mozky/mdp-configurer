@@ -1,0 +1,5 @@
+name: 'MDP Project Configuration'
+description: 'Get a project configuration'
+runs:
+  using: 'node12'
+  main: 'index.js'
