@@ -28,10 +28,16 @@ try {
     } else {
       console.log('Document data:', doc.data());
 
+      const projectSettings = JSON.parse(doc.data())
+
+      const envVars = Object.entries(projectSettings.keys).reduce((acc, [key, value]) => {
+        return acc + `${key}=${value}\n`
+      }, "")
+
       const payload = JSON.stringify(github.context.payload, undefined, 2)
       console.log(`The event payload: ${payload}`)
 
-      fs.writeFileSync('.env', process.env.MDP_PROJECT_ID, err => {
+      fs.writeFileSync('.env', envVars, err => {
         if (err) throw err
         console.log('Config file created')
       })
