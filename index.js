@@ -1,18 +1,46 @@
 const fs = require("fs")
 const core = require("@actions/core")
+const admin = require('firebase-admin')
 const github = require("@actions/github")
 
 try {
   console.log('Getting configuration for project', process.env)
-  console.log('Project Id input', process.env.MDP_PROJECT_ID)
+  const projectId = process.env.MDP_PROJECT_ID
+  console.log('Project Id input', projectId)
 
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`)
+  // Fetch the service account key JSON file contents
+  const serviceAccount = JSON.parse(
+    Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_KEY, "base64").toString()
+  )
 
-  fs.writeFileSync('.env', process.env.MDP_PROJECT_ID, err => {
-    if (err) throw err
-    console.log('Config file created')
+  // Initialize the app with a service account, granting admin privileges
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
+
+  // As an admin, the app has access to read and write all data, regardless of Security Rules
+  var db = admin.firestore();
+
+  db.collection("project-settings").doc(projectId).get()
+  .then(doc => {
+    if (!doc.exists) {
+      console.log('No such document!');
+    } else {
+      console.log('Document data:', doc.data());
+
+      const payload = JSON.stringify(github.context.payload, undefined, 2)
+      console.log(`The event payload: ${payload}`)
+
+      fs.writeFileSync('.env', process.env.MDP_PROJECT_ID, err => {
+        if (err) throw err
+        console.log('Config file created')
+      })
+    }
   })
+  .catch(err => {
+    console.log('Error getting documents', err);
+  });
+
 } catch (err) {
   console.log(err)
   core.setFailed(err.message)
