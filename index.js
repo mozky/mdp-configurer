@@ -9,7 +9,7 @@ try {
   const payload = JSON.stringify(github.context.payload, undefined, 2)
   console.log(`The event payload: ${payload}`)
 
-  fs.writeFileSync('config/.env', process.env.MDP_PROJECT_ID, err => {
+  fs.writeFileSync('.env', process.env.MDP_PROJECT_ID, err => {
     if (err) throw err
     console.log('Config file created')
   })
