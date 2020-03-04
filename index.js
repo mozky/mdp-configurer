@@ -31,7 +31,7 @@ try {
       const projectSettings = doc.data()
 
       const envVars = Object.entries(projectSettings.keys).reduce((acc, [key, value]) => {
-        return acc + `${key}=${value}\n`
+        return acc + `${key}="${value}"\n`
       }, "")
 
       const payload = JSON.stringify(github.context.payload, undefined, 2)
