@@ -28,7 +28,7 @@ try {
     } else {
       console.log('Document data:', doc.data());
 
-      const projectSettings = JSON.parse(doc.data())
+      const projectSettings = doc.data()
 
       const envVars = Object.entries(projectSettings.keys).reduce((acc, [key, value]) => {
         return acc + `${key}=${value}\n`
