@@ -6,7 +6,7 @@
   "dependencies": {
     "@actions/core": "^1.2.3",
     "@actions/github": "^2.1.1",
-    "firebase-admin": "^8.9.2"
+    "firebase-admin": "^11.4.1"
   },
   "devDependencies": {},
   "scripts": {
